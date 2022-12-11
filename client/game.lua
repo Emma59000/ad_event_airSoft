@@ -17,13 +17,18 @@ RMenu:Get('airSoft', 'main').Closed = function()
 end;
 
 Citizen.CreateThread(function()
-    while ESX == nil do TriggerEvent('esx:getSh4587poiaredObj4587poiect', function(obj) ESX = obj end) Wait(0) end
-    preRace()
+    while ESX == nil do
+        TriggerEvent('esx:getSh4587poiaredObj4587poiect', function(obj)
+            ESX = obj
+        end)
+        Wait(0)
+    end
 end)
 
 RegisterNetEvent("ad_event:StartLaunchJoin")
 AddEventHandler("ad_event:StartLaunchJoin", function()
     LaunchJoin = true
+    startPoint()
 end)
 
 RegisterNetEvent("ad_event:StopLaunchJoin")
@@ -60,46 +65,48 @@ AddEventHandler("ad_event:StopLaunchJoinAndGame", function()
     Team = nil
 end)
 
-function preRace()
-    while true do
+function startPoint()
+    while LaunchJoin == true and IsInGame == false do
         local _Wait = 500
         if LaunchJoin == true and IsInGame == false then
             local PlayerPed = GetPlayerPed(-1)
             local PlayerCoords = GetEntityCoords(PlayerPed)
-            if GetDistanceBetweenCoords( Config.StartPointGreen, PlayerCoords) < 20.0 then
+            local dst = GetDistanceBetweenCoords( Config.StartPointGreen, PlayerCoords)
+            if dst < 20.0 then
                 DrawMarker(1, Config.StartPointGreen.x, Config.StartPointGreen.y, Config.StartPointGreen.z - 1.5, 0, 0, 0, 0, 0, 0, 3.0001, 3.0001, 1.5001, 0, 255, 0, 180, 0, 0, 0,0)
                 _Wait = 1
-            end
-            if GetDistanceBetweenCoords( Config.StartPointGreen, PlayerCoords) < 10.0 then
-                Draw3DText( Config.StartPointGreen.x, Config.StartPointGreen.y, Config.StartPointGreen.z -.500, "~b~A~w~D Event",4,0.3,0.2)
-                Draw3DText( Config.StartPointGreen.x, Config.StartPointGreen.y, Config.StartPointGreen.z  -.900, "Rejoindre l'équipe ~g~verte",4,0.3,0.2)
-            end
-            if GetDistanceBetweenCoords( Config.StartPointGreen, PlayerCoords) < 2.0 then
-                Draw3DText( Config.StartPointGreen.x, Config.StartPointGreen.y, Config.StartPointGreen.z  -1.400, "Appuyez sur E pour rejoindre",4,0.15,0.1)
-                if (IsControlJustReleased(1, 38)) then
-                    if IsInGame == false then
-                        TriggerEvent('ad_event:StartTeamGreen')
-                    else
-                        return
+                if dst < 10.0 then
+                    Draw3DText( Config.StartPointGreen.x, Config.StartPointGreen.y, Config.StartPointGreen.z -.500, "~b~A~w~D Event",4,0.3,0.2)
+                    Draw3DText( Config.StartPointGreen.x, Config.StartPointGreen.y, Config.StartPointGreen.z  -.900, "Rejoindre l'équipe ~g~verte",4,0.3,0.2)
+                    if dst < 2.0 then
+                        Draw3DText( Config.StartPointGreen.x, Config.StartPointGreen.y, Config.StartPointGreen.z  -1.400, "Appuyez sur E pour rejoindre",4,0.15,0.1)
+                        if (IsControlJustReleased(1, 38)) then
+                            if IsInGame == false then
+                                TriggerEvent('ad_event:StartTeamGreen')
+                            else
+                                return
+                            end
+                        end
                     end
                 end
             end
             
-            if GetDistanceBetweenCoords( Config.StartPointRed, PlayerCoords) < 20.0 then
+            local dst2 = GetDistanceBetweenCoords(Config.StartPointRed, PlayerCoords)
+            if dst2 < 20.0 then
                 DrawMarker(1, Config.StartPointRed.x, Config.StartPointRed.y, Config.StartPointRed.z - 1.5, 0, 0, 0, 0, 0, 0, 3.0001, 3.0001, 1.5001, 255, 0, 0, 180, 0, 0, 0,0)
                 _Wait = 1
-            end
-            if GetDistanceBetweenCoords( Config.StartPointRed, PlayerCoords) < 10.0 then
-                Draw3DText( Config.StartPointRed.x, Config.StartPointRed.y, Config.StartPointRed.z -.500, "~b~A~w~D Event",4,0.3,0.2)
-                Draw3DText( Config.StartPointRed.x, Config.StartPointRed.y, Config.StartPointRed.z  -.900, "Rejoindre l'équipe ~r~rouge",4,0.3,0.2)
-            end
-            if GetDistanceBetweenCoords( Config.StartPointRed, PlayerCoords) < 2.0 then
-                Draw3DText( Config.StartPointRed.x, Config.StartPointRed.y, Config.StartPointRed.z  -1.400, "Appuyez sur E pour rejoindre",4,0.15,0.1)
-                if (IsControlJustReleased(1, 38)) then
-                    if IsInGame == false then
-                        TriggerEvent('ad_event:StartTeamRed')
-                    else
-                        return
+                if dst2 < 10.0 then
+                    Draw3DText(Config.StartPointRed.x, Config.StartPointRed.y, Config.StartPointRed.z -.500, "~b~A~w~D Event",4,0.3,0.2)
+                    Draw3DText(Config.StartPointRed.x, Config.StartPointRed.y, Config.StartPointRed.z  -.900, "Rejoindre l'équipe ~r~rouge",4,0.3,0.2)
+                    if dst2 < 2.0 then
+                        Draw3DText(Config.StartPointRed.x, Config.StartPointRed.y, Config.StartPointRed.z  -1.400, "Appuyez sur E pour rejoindre",4,0.15,0.1)
+                        if (IsControlJustReleased(1, 38)) then
+                            if IsInGame == false then
+                                TriggerEvent('ad_event:StartTeamRed')
+                            else
+                                return
+                            end
+                        end
                     end
                 end
             end
